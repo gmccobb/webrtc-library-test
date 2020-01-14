@@ -144,6 +144,15 @@ export default class RTCPeerConnection extends EventTarget(PEER_CONNECTION_EVENT
     WebRTCModule.peerConnectionSetConfiguration(configuration, this._peerConnectionId);
   }
 
+  getLocalDescription(successCallback: ?Function) {
+    WebRTCModule.peerConnectionGetLocalDescription(
+			this._peerConnectionId,
+			(successful, data) => {
+			//	successCallback(new RTCSessionDescription(data));
+				successCallback(data);
+		});
+  }
+
   setLocalDescription(sessionDescription: RTCSessionDescription) {
     return new Promise((resolve, reject) => {
       WebRTCModule.peerConnectionSetLocalDescription(
