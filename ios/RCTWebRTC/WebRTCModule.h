@@ -8,8 +8,13 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
+#if __has_include("RCTBridgeModule.h")
+#import "RCTBridgeModule.h"
+#import "RCTConvert.h"
+#else
 #import <React/RCTBridgeModule.h>
 #import <React/RCTConvert.h>
+#endif
 
 #import <WebRTC/RTCMediaStream.h>
 #import <WebRTC/RTCPeerConnectionFactory.h>

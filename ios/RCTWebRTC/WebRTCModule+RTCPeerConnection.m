@@ -7,10 +7,18 @@
 
 #import <objc/runtime.h>
 
+#if __has_include("RCTBridge.h")
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
+#import "RCTLog.h"
+#import "RCTUtils.h"
+#else
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTLog.h>
 #import <React/RCTUtils.h>
+#endif
+
 
 #import <WebRTC/RTCConfiguration.h>
 #import <WebRTC/RTCIceCandidate.h>
@@ -19,6 +27,7 @@
 #import <WebRTC/RTCIceCandidate.h>
 #import <WebRTC/RTCLegacyStatsReport.h>
 #import <WebRTC/RTCSessionDescription.h>
+#import <WebRTC/RTCSSLAdapter.h>
 
 #import "WebRTCModule.h"
 #import "WebRTCModule+RTCDataChannel.h"
@@ -84,13 +93,16 @@
 RCT_EXPORT_METHOD(peerConnectionInit:(RTCConfiguration*)configuration
                             objectID:(nonnull NSNumber *)objectID)
 {
+  RTCInitializeSSL();
+  if (self.peerConnectionFactory == nil) {
+    self.peerConnectionFactory = [RTCPeerConnectionFactory new];
+  }
+
   NSDictionary *optionalConstraints = @{ @"DtlsSrtpKeyAgreement" : @"true" };
   RTCMediaConstraints* constraints =
       [[RTCMediaConstraints alloc] initWithMandatoryConstraints:nil
                                             optionalConstraints:optionalConstraints];
-  RTCPeerConnection *peerConnection
-    = [self.peerConnectionFactory
-      peerConnectionWithConfiguration:configuration
+  RTCPeerConnection *peerConnection  = [self.peerConnectionFactory peerConnectionWithConfiguration:configuration
 			  constraints:constraints
                              delegate:self];
 
@@ -223,6 +235,18 @@ RCT_EXPORT_METHOD(peerConnectionSetLocalDescription:(RTCSessionDescription *)sdp
   }];
 }
 
+RCT_EXPORT_METHOD(peerConnectionGetLocalDescription:(nonnull NSNumber *)objectID callback:(RCTResponseSenderBlock)callback)
+{
+    RTCPeerConnection *peerConnection = self.peerConnections[objectID];
+    if (!peerConnection) {
+        return;
+    }
+    
+    RTCSessionDescription* sdp = [peerConnection localDescription];
+    NSString *type = [RTCSessionDescription stringForType:sdp.type];
+    callback(@[@(YES), @{@"sdp": sdp.sdp, @"type": type}]);
+}
+
 RCT_EXPORT_METHOD(peerConnectionSetRemoteDescription:(RTCSessionDescription *)sdp objectID:(nonnull NSNumber *)objectID callback:(RCTResponseSenderBlock)callback)
 {
   RTCPeerConnection *peerConnection = self.peerConnections[objectID];
@@ -285,6 +309,7 @@ RCT_EXPORT_METHOD(peerConnectionClose:(nonnull NSNumber *)objectID)
     // RTCPeerConnection and the latter will close the former.
   }
   [dataChannels removeAllObjects];
+  RTCCleanupSSL();
 }
 
 RCT_EXPORT_METHOD(peerConnectionGetStats:(nonnull NSString *)trackID

@@ -4,9 +4,15 @@
 #import <objc/runtime.h>
 #import <stdatomic.h>
 
+#if __has_include("RCTBridge.h")
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
+#import "RCTLog.h"
+#else
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTLog.h>
+#endif
 
 #import <WebRTC/RTCVideoRenderer.h>
 #import <WebRTC/RTCVideoTrack.h>

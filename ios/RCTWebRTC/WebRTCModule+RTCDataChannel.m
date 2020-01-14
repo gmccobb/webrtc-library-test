@@ -1,7 +1,12 @@
 #import <objc/runtime.h>
 
+#if __has_include("RCTBridge.h")
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
+#else
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
+#endif
 
 #import "WebRTCModule+RTCDataChannel.h"
 #import "WebRTCModule+RTCPeerConnection.h"

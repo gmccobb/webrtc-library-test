@@ -7,9 +7,15 @@
 
 #import <UIKit/UIKit.h>
 
+#if __has_include("RCTBridge.h")
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
+#import "RCTUtils.h"
+#else
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTUtils.h>
+#endif
 
 #import <WebRTC/RTCDefaultVideoDecoderFactory.h>
 #import <WebRTC/RTCDefaultVideoEncoderFactory.h>
@@ -62,9 +68,9 @@
     if (decoderFactory == nil) {
       decoderFactory = [[RTCDefaultVideoDecoderFactory alloc] init];
     }
-    _peerConnectionFactory
-      = [[RTCPeerConnectionFactory alloc] initWithEncoderFactory:encoderFactory
-                                                  decoderFactory:decoderFactory];
+    // _peerConnectionFactory
+    //  = [[RTCPeerConnectionFactory alloc] initWithEncoderFactory:encoderFactory
+    //                                              decoderFactory:decoderFactory];
 
     _peerConnections = [NSMutableDictionary new];
     _localStreams = [NSMutableDictionary new];
