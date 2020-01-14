@@ -325,31 +325,31 @@ RCT_CUSTOM_VIEW_PROPERTY(objectFit, NSString *, RTCVideoView) {
 
 RCT_CUSTOM_VIEW_PROPERTY(streamURL, NSString *, RTCVideoView) {
 
-    if (json) {
+  if (json) {
 
     NSString *streamReactTag = (NSString *)json;
-        if (streamReactTag != nil && streamReactTag.length > 0) {
+    if (streamReactTag != nil && streamReactTag.length > 0) {
         
-    WebRTCModule *module = view.module;
+      WebRTCModule *module = view.module;
 
-    dispatch_async(module.workerQueue, ^{
+      dispatch_async(module.workerQueue, ^{
         RTCMediaStream *stream = [module streamForReactTag:streamReactTag];
         NSArray *videoTracks = stream ? stream.videoTracks : @[];
         RTCVideoTrack *videoTrack = [videoTracks firstObject];
         if (!videoTrack) {
             RCTLogWarn(@"No video stream for react tag: %@", streamReactTag);
-                }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                view.videoTrack = videoTrack;
-            });
-            });
-            return;
         }
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+          view.videoTrack = videoTrack;
+        });
+      });
+      return;
+    }
+  }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        view.videoTrack = nil;
-    });
+  dispatch_async(dispatch_get_main_queue(), ^{
+    view.videoTrack = nil;
+  });
 }
 
 + (BOOL)requiresMainQueueSetup
