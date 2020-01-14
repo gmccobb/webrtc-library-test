@@ -1,4 +1,4 @@
-# react-native-webrtc
+# webrtc-library-test
 
 [![npm version](https://badge.fury.io/js/react-native-webrtc.svg)](https://badge.fury.io/js/react-native-webrtc)
 [![npm downloads](https://img.shields.io/npm/dm/react-native-webrtc.svg?maxAge=2592000)](https://img.shields.io/npm/dm/react-native-webrtc.svg?maxAge=2592000)
@@ -6,6 +6,14 @@
 A WebRTC module for React Native.
 - Support iOS / Android.
 - Support Video / Audio / Data Channels.
+
+This is a fork of the react-native-webrtc module:
+- Adds getLocalSession:
+  * For react native apps that don't use WebRTC to make or receive VoIP calls
+  * For react native apps that use the Pexip WebRTC server and API
+- Replaces android.support.annotation.* classes with androidx.annotation.*.
+  * E.g., import androidx.annotation.Nullable;
+  * Fixes Android Studio build error for newer SDKs.
 
 **NOTE** for Expo users: this plugin doesn't work unless you eject.
 
