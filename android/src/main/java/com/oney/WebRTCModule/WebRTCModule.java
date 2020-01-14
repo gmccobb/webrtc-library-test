@@ -1,6 +1,6 @@
 package com.oney.WebRTCModule;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -760,6 +760,34 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
             Log.d(TAG, "peerConnectionCreateAnswer() peerConnection is null");
             callback.invoke(false, "peerConnection is null");
         }
+    }
+
+    @ReactMethod
+    public void peerConnectionGetLocalDescription(int id,
+                                                  Callback callback) {
+        
+        ThreadUtils.runOnExecutor(() ->
+            peerConnectionGetLocalDescriptionAsync(id, callback));
+    }
+
+    private void peerConnectionGetLocalDescriptionAsync(int id,
+                                                       final Callback callback) {
+        
+        PeerConnection peerConnection = getPeerConnection(id);
+        if (peerConnection != null) {
+            SessionDescription sdp = peerConnection.getLocalDescription();
+
+            WritableMap sdpMap = Arguments.createMap();
+            sdpMap.putString("sdp", sdp.description);
+            sdpMap.putString("type", sdp.type.canonicalForm());
+            callback.invoke(true, sdpMap);
+            
+        } else {
+            Log.d(TAG, "peerConnectionGetLocalDescription() peerConnection is null");
+            callback.invoke(false, "peerConnection is null");
+        }
+        Log.d(TAG, "peerConnectionGetLocalDescription() end");
+
     }
 
     @ReactMethod

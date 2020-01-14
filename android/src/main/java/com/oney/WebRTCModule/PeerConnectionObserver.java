@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
@@ -119,7 +119,7 @@ class PeerConnectionObserver implements PeerConnection.Observer {
         // is added to multiple PeerConnections. In order to reduce the risks of
         // an app crash, remove all local MediaStreams from the associated
         // PeerConnection so that it doesn't attempt to dispose of them.
-        for (MediaStream localStream : new ArrayList<>(localStreams)) {
+        for (MediaStream localStream : new ArrayList<MediaStream>(localStreams)) {
             removeStream(localStream);
         }
 
